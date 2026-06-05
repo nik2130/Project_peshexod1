@@ -58,7 +58,7 @@ public class Person {
             if (stepAnimationCounter >= STEP_ANIMATION_FRAMES) {
                 isMoving = false;
                 stepAnimationCounter = 0;
-                stepsTaken+=10;
+                stepsTaken+=1;
             }
         }
         if (isMovingY) {

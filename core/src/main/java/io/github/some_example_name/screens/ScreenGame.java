@@ -44,6 +44,9 @@ public class ScreenGame implements Screen {
     private TextButtonWalk buttonDown;
     private TextButtonWalk buttonJump;
     private boolean backdesert = false;
+    private boolean winter = false;
+
+
 
     int eat = 100;
 
@@ -225,6 +228,8 @@ public class ScreenGame implements Screen {
         shavermTex = new Texture("images/Shaverma.png");
         isGameOver = false;
         backdesert = false;
+        winter = false;
+
         gamePoints = 0;
         eat = 100;
         gameState = GameState.PLAYING;
@@ -305,7 +310,7 @@ public class ScreenGame implements Screen {
                     Resurces.gameMusic.pause();
                     return;
                 }
-                if (gamePoints>200 && backdesert==false){
+                if (gamePoints>300 && backdesert==false){
                     background = new MovingBackground("backgrounds/desert.jpg");
                     for (Lukes l : lukes) l.dispose();
                     for (Car c : cars) c.dispose();
@@ -321,6 +326,23 @@ public class ScreenGame implements Screen {
                     initCars();
                     initShaverm();
                     backdesert = true;
+                }
+                if (gamePoints>600 && winter==false){
+                    background = new MovingBackground("backgrounds/fonz.jpg");
+                    for (Lukes l : lukes) l.dispose();
+                    for (Car c : cars) c.dispose();
+                    for (Shaverm s : shaverm) s.dispose();
+                    if (lukest != null) lukest.dispose();
+                    if (carTex != null) carTex.dispose();
+                    if (shavermTex != null) shavermTex.dispose();
+                    lukest = new Texture("images/snegov.png");
+                    carTex = new Texture("images/snegox.png");
+                    shavermTex = new Texture("images/cand.png");
+
+                    initLukes();
+                    initCars();
+                    initShaverm();
+                    winter = true;
                 }
 
                 int touchY = Gdx.input.getY();

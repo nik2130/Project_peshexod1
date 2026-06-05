@@ -10,6 +10,7 @@ import io.github.some_example_name.screens.ScreenRestart;
 import io.github.some_example_name.screens.ScreenSettings;
 import io.github.some_example_name.screens.ScreenSkins;
 import io.github.some_example_name.screens.ScreenSounds;
+import io.github.some_example_name.screens.ScreenAchievements;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends Game {
@@ -20,6 +21,7 @@ public class Main extends Game {
     public ScreenSettings screenSettings;
     public ScreenSkins screenSkins;
     public ScreenSounds screenSounds;
+    public ScreenAchievements screenAchievements;
 
     public static final int SCR_WIDTH = 1280;
     public static final int SCR_HEIGHT = 720;
@@ -44,6 +46,7 @@ public class Main extends Game {
         screenSettings = new ScreenSettings(this);
         screenSkins = new ScreenSkins(this);
         screenSounds = new ScreenSounds(this);
+        screenAchievements = new ScreenAchievements(this);
         setScreen(screenMenu);
     }
 

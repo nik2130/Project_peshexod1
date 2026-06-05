@@ -20,6 +20,7 @@ public class ScreenSettings implements Screen {
     MovingBackground background;
     TextButton buttonSkins;
     TextButton buttonSounds;
+    TextButton buttonAchievements;
     TextButton buttonResetRecords;
     TextButton buttonQuit;
 
@@ -38,7 +39,8 @@ public class ScreenSettings implements Screen {
 
         buttonSkins = new TextButton(440, 460, "SKINS");
         buttonSounds = new TextButton(440, 330, "SOUNDS");
-        buttonQuit = new TextButton(440, 200, "BACK");
+        buttonAchievements = new TextButton(440, 200, "ACHIEVEMENTS");
+        buttonQuit = new TextButton(440, 70, "BACK");
 
         buttonResetRecords = createCompactButton(1100, 650, "RESET", 3f, 180, 70);
 
@@ -122,6 +124,9 @@ public class ScreenSettings implements Screen {
             if (buttonSounds.isHint((int) touch.x, (int) touch.y)) {
                 main.setScreen(main.screenSounds);
             }
+            if (buttonAchievements.isHint((int) touch.x, (int) touch.y)) {
+                main.setScreen(main.screenAchievements);
+            }
             if (buttonResetRecords.isHint((int) touch.x, (int) touch.y)) {
                 main.scoreManager.resetAllRecords();
 
@@ -137,6 +142,7 @@ public class ScreenSettings implements Screen {
 
         buttonSkins.draw(main.batch);
         buttonSounds.draw(main.batch);
+        buttonAchievements.draw(main.batch);
         buttonQuit.draw(main.batch);
 
         buttonResetRecords.draw(main.batch);
@@ -188,6 +194,7 @@ public class ScreenSettings implements Screen {
         background.dispose();
         buttonSkins.dispose();
         buttonSounds.dispose();
+        buttonAchievements.dispose();
         buttonResetRecords.dispose();
         buttonQuit.dispose();
         notificationFont.dispose();
