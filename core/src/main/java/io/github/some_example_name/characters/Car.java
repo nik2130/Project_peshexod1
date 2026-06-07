@@ -44,8 +44,8 @@ public class Car {
         downSpeed = 3 + random.nextInt(4);
 
         isActive = false;
-        x = -1000;
-        y = -1000;
+        x = -SCR_WIDTH;
+        y = -SCR_HEIGHT-300;
     }
 
 

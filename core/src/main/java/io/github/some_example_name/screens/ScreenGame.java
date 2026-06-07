@@ -494,7 +494,7 @@ public class ScreenGame implements Screen {
 
         for (Car car : cars) {
             if (car.isActive) {
-                drawableItems.add(new DrawableItem(car, car.y + 1000, 4));
+                drawableItems.add(new DrawableItem(car, car.y, 4));
             }
         }
 

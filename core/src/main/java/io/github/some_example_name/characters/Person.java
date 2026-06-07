@@ -7,6 +7,8 @@ import static io.github.some_example_name.Resurces.PERSON2_IMG_PATH;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
+import io.github.some_example_name.Main;
+
 public class Person {
     int x;
     public int y;
@@ -18,6 +20,7 @@ public class Person {
     private boolean isMovingYM = false;
     private int stepAnimationCounter = 0;
     private final int STEP_ANIMATION_FRAMES = 15;
+    Main main;
     Texture[] framesArray;
     int frameCount;
     int stepsTaken = 0;
@@ -63,7 +66,7 @@ public class Person {
         }
         if (isMovingY) {
             stepAnimationCounter++;
-            if (y < 800) {
+            if (y < main.SCR_HEIGHT-100) {
                 y += 5;
             }
 
