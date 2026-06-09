@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import io.github.some_example_name.screens.ScreenGame;
+import io.github.some_example_name.Resurces;
 
 public class Lukes {
     Texture texture;
@@ -28,8 +28,6 @@ public class Lukes {
     private static final int SAFE_SPAWN_ZONE_Y = 50;
     private static final int SAFE_SPAWN_ZONE_WIDTH = 300;
     private static final int SAFE_SPAWN_ZONE_HEIGHT = 200;
-    public ScreenGame screenGame;
-
 
     public Lukes(int lukesCount, int lukesIdx) {
         random = new Random();
@@ -73,7 +71,7 @@ public class Lukes {
         }
 
         activeLukes.add(this);
-        texture = new Texture("images/luk.png");
+        texture = Resurces.loadTexture(Resurces.PATH_LUKE);
     }
 
     private boolean hasCollisionWithOtherLukes() {
@@ -98,7 +96,7 @@ public class Lukes {
     }
 
     public void dispose() {
-        if (texture != null && texture != screenGame.lukest) {
+        if (texture != null && texture != Resurces.lukest) {
             texture.dispose();
         }
         texture = null;
@@ -118,7 +116,7 @@ public class Lukes {
     private void deactivate() {
         isActive = false;
         activeLukes.remove(this);
-        if (texture != null && texture != screenGame.lukest) {
+        if (texture != null && texture != Resurces.lukest) {
             texture.dispose();
         }
         texture = null;
@@ -171,7 +169,7 @@ public class Lukes {
         if (texture != null) {
             texture.dispose();
         }
-        texture = screenGame.lukest;
+        texture = Resurces.lukest;
     }
 
     public boolean isCollision(Person person) {

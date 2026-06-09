@@ -27,7 +27,7 @@ public class ScreenMenu implements Screen {
 
     public ScreenMenu(Main main) {
         this.main = main;
-        background = new MovingBackground("backgrounds/restart_bg.png");
+        background = new MovingBackground(Resurces.PATH_BG_RESTART);
         buttonStart = new TextButton(440, 300, "START");
         buttonSettings = new TextButton(440, 180, "SETTINGS");
 
@@ -36,7 +36,7 @@ public class ScreenMenu implements Screen {
         highScoreCounter = new PointCounter(counterMarginLeft, counterMarginBottom + counterSpacing);
 
         buttonQuit = new TextButton(440, 50, "QUIT");
-        logo = new MovingBackground("images/logo.png");
+        logo = new MovingBackground(Resurces.PATH_LOGO);
     }
 
     @Override

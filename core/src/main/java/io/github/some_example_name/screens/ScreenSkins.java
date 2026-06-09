@@ -21,16 +21,14 @@ public class ScreenSkins implements Screen {
     TextButton buttonSkin2;
     TextButton buttonSkin3;
     TextButton buttonQuit;
-    Texture skinTexture;
 
     public ScreenSkins(Main main) {
         this.main = main;
-        background = new MovingBackground("backgrounds/restart_bg.png");
+        background = new MovingBackground(Resurces.PATH_BG_RESTART);
         buttonSkin1 = new TextButton(200, 550, "Human");
         buttonSkin2 = new TextButton(200, 400, "Gomuncul");
         buttonSkin3 = new TextButton(200, 250, "WtfFf']qaw!!11!");
         buttonQuit = new TextButton(440, 50, "BACK");
-        skinTexture = new Texture(Resurces.skin); //
     }
 
     @Override
@@ -53,7 +51,7 @@ public class ScreenSkins implements Screen {
                 Resurces.PERSON1_IMG_PATH = "skins/bluebird/blue_bird1.png";
                 Resurces.PERSON2_IMG_PATH = "skins/bluebird/blue_bird2.png";
                 main.skinChanged = true;
-                updateSkinTexture();
+                Resurces.reloadSkinTexture();
             }
             if (buttonSkin2.isHint((int) touch.x, (int) touch.y)) {
                 Resurces.skin = "skins/bird2/p1.png";
@@ -66,7 +64,7 @@ public class ScreenSkins implements Screen {
                 Resurces.PERSON6_IMG_PATH = "skins/bird2/p8.png";
                 Resurces.PERSON7_IMG_PATH = "skins/bird2/p9.png";
                 main.skinChanged = true;
-                updateSkinTexture();
+                Resurces.reloadSkinTexture();
             }
             if (buttonSkin3.isHint((int) touch.x, (int) touch.y)) {
                 Resurces.skin = "skins/wtfbird/birdS.png";
@@ -74,7 +72,7 @@ public class ScreenSkins implements Screen {
                 Resurces.PERSON1_IMG_PATH = "skins/wtfbird/bird1.png";
                 Resurces.PERSON2_IMG_PATH = "skins/wtfbird/bird2.png";
                 main.skinChanged = true;
-                updateSkinTexture();
+                Resurces.reloadSkinTexture();
             }
             if (buttonQuit.isHint((int) touch.x, (int) touch.y)) {
                 main.setScreen(main.screenSettings);
@@ -82,18 +80,13 @@ public class ScreenSkins implements Screen {
         }
 
         background.onDraw(main.batch);
-        main.batch.draw(skinTexture, 700, 200, 500, 400);
+        main.batch.draw(Resurces.skinTexture, 700, 200, 500, 400);
         buttonSkin1.draw(main.batch);
         buttonSkin2.draw(main.batch);
         buttonSkin3.draw(main.batch);
         buttonQuit.draw(main.batch);
 
         main.batch.end();
-    }
-
-    private void updateSkinTexture() {
-        skinTexture.dispose();
-        skinTexture = new Texture(Resurces.skin);
     }
 
     @Override
@@ -119,6 +112,5 @@ public class ScreenSkins implements Screen {
     @Override
     public void dispose() {
         background.dispose();
-        skinTexture.dispose();
     }
 }

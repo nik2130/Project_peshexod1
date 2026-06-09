@@ -6,7 +6,7 @@ import static io.github.some_example_name.Main.SCR_WIDTH;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -46,8 +46,6 @@ public class ScreenGame implements Screen {
     private boolean backdesert = false;
     private boolean winter = false;
 
-
-
     int eat = 100;
 
     private static Preferences preferences = Gdx.app.getPreferences("User saves");
@@ -69,6 +67,7 @@ public class ScreenGame implements Screen {
     private TextButton resumeButton;
     private TextButton restartButton;
     private TextButton menuButton;
+    private TextButton pauseSoundBtn;
 
     private Vector3 touchPoint = new Vector3();
 
@@ -91,9 +90,6 @@ public class ScreenGame implements Screen {
     private final int BUTTONS_POS_X = 80;
     private final int BUTTON_UP_Y = SCR_HEIGHT - BUTTON_SIZE - BUTTON_MARGIN;
     private final int BUTTON_DOWN_Y = BUTTON_MARGIN;
-    public Texture lukest = new Texture("images/luk.png");
-    public Texture carTex = new Texture("cars/car0.png");
-    public Texture shavermTex = new Texture("images/Shaverma.png");
 
     public ScreenGame(Main main) {
         this.main = main;
@@ -107,7 +103,7 @@ public class ScreenGame implements Screen {
 
         pointCounter = new PointCounter(SCR_WIDTH - pointCounterMarginRight - 100, SCR_HEIGHT - pointCounterMarginTop);
         eatCounter = new EatCounter(SCR_WIDTH - pointCounterMarginRight - 900, SCR_HEIGHT - pointCounterMarginTop);
-        background = new MovingBackground("backgrounds/road_bg.png");
+        background = new MovingBackground(Resurces.PATH_BG_ROAD);
 
         pauseButton = createCompactButton(SCR_WIDTH - 120, SCR_HEIGHT - 80, "II", 2.5f, 60, 60);
 
@@ -134,21 +130,21 @@ public class ScreenGame implements Screen {
         return button;
     }
     private void initMovementButtons() {
-        buttonJump = new TextButtonWalk(1100, 100, "", "images/right.png");
+        buttonJump = new TextButtonWalk(1100, 100, "", Resurces.PATH_RIGHT);
         buttonJump.buttonWidth = BUTTON_SIZE;
         buttonJump.buttonHeight = BUTTON_SIZE;
         buttonJump.textX = buttonJump.x + (BUTTON_SIZE - buttonJump.textWidth) / 2;
         buttonJump.textY = buttonJump.y + BUTTON_SIZE / 2 + buttonJump.textHeight / 2;
         buttonJump.font.getData().setScale(2.0f);
 
-        buttonUp = new TextButtonWalk(1000, 150, "","images/up.png");
+        buttonUp = new TextButtonWalk(1000, 150, "", Resurces.PATH_UP);
         buttonUp.buttonWidth = BUTTON_SIZE;
         buttonUp.buttonHeight = BUTTON_SIZE;
         buttonUp.textX = buttonUp.x + (BUTTON_SIZE - buttonUp.textWidth) / 2;
         buttonUp.textY = buttonUp.y + BUTTON_SIZE / 2 + buttonUp.textHeight / 2;
         buttonUp.font.getData().setScale(2.0f);
 
-        buttonDown = new TextButtonWalk(1000, 50, "","images/down.png" );
+        buttonDown = new TextButtonWalk(1000, 50, "", Resurces.PATH_DOWN);
         buttonDown.buttonWidth = BUTTON_SIZE;
         buttonDown.buttonHeight = BUTTON_SIZE;
         buttonDown.textX = buttonDown.x + (BUTTON_SIZE - buttonDown.textWidth) / 2;
@@ -206,26 +202,27 @@ public class ScreenGame implements Screen {
         int centerY = SCR_HEIGHT / 2;
 
         int buttonX = centerX - BUTTON_OFFSET_X;
-        int baseY = centerY + BUTTON_OFFSET_Y;
+        int totalHeight = 4 * BUTTON_HEIGHT + 3 * PAUSE_BUTTON_SPACING;
+        int startY = centerY + totalHeight / 2;
 
-        int resumeY = baseY + BUTTON_HEIGHT + PAUSE_BUTTON_SPACING;
-        int restartY = baseY;
-        int menuY = baseY - BUTTON_HEIGHT - PAUSE_BUTTON_SPACING;
+        int resumeY = startY;
+        int restartY = startY - BUTTON_HEIGHT - PAUSE_BUTTON_SPACING;
+        int soundY = restartY - BUTTON_HEIGHT - PAUSE_BUTTON_SPACING;
+        int menuY = soundY - BUTTON_HEIGHT - PAUSE_BUTTON_SPACING;
 
         resumeButton = new TextButton(buttonX, resumeY, "RESUME");
         restartButton = new TextButton(buttonX, restartY, "RESTART");
+        pauseSoundBtn = new TextButton(buttonX, soundY, "SOUND");
         menuButton = new TextButton(buttonX, menuY, "MENU");
     }
 
     @Override
     public void show() {
-        background = new MovingBackground("backgrounds/road_bg.png");
-        if (lukest != null) lukest.dispose();
-        if (carTex != null) carTex.dispose();
-        if (shavermTex != null) shavermTex.dispose();
-        lukest = new Texture("images/luk.png");
-        carTex = new Texture("cars/car0.png");
-        shavermTex = new Texture("images/Shaverma.png");
+        background = new MovingBackground(Resurces.PATH_BG_ROAD);
+
+        Resurces.lukest = Resurces.loadTexture(Resurces.PATH_LUKE);
+        Resurces.carTex = Resurces.loadTexture(Resurces.PATH_CAR);
+        Resurces.shavermTex = Resurces.loadTexture(Resurces.PATH_SHAVERM);
         isGameOver = false;
         backdesert = false;
         winter = false;
@@ -311,16 +308,13 @@ public class ScreenGame implements Screen {
                     return;
                 }
                 if (gamePoints>300 && backdesert==false){
-                    background = new MovingBackground("backgrounds/desert.jpg");
+                    background = new MovingBackground(Resurces.PATH_BG_DESERT);
                     for (Lukes l : lukes) l.dispose();
                     for (Car c : cars) c.dispose();
                     for (Shaverm s : shaverm) s.dispose();
-                    if (lukest != null) lukest.dispose();
-                    if (carTex != null) carTex.dispose();
-                    if (shavermTex != null) shavermTex.dispose();
-                    lukest = new Texture("images/Kol.png");
-                    carTex = new Texture("images/gruz.png");
-                    shavermTex = new Texture("images/plod.png");
+                    Resurces.lukest = Resurces.loadTexture(Resurces.PATH_LUKE_DESERT);
+                    Resurces.carTex = Resurces.loadTexture(Resurces.PATH_CAR_DESERT);
+                    Resurces.shavermTex = Resurces.loadTexture(Resurces.PATH_SHAVERM_DESERT);
 
                     initLukes();
                     initCars();
@@ -328,16 +322,13 @@ public class ScreenGame implements Screen {
                     backdesert = true;
                 }
                 if (gamePoints>600 && winter==false){
-                    background = new MovingBackground("backgrounds/fonz.jpg");
+                    background = new MovingBackground(Resurces.PATH_BG_WINTER);
                     for (Lukes l : lukes) l.dispose();
                     for (Car c : cars) c.dispose();
                     for (Shaverm s : shaverm) s.dispose();
-                    if (lukest != null) lukest.dispose();
-                    if (carTex != null) carTex.dispose();
-                    if (shavermTex != null) shavermTex.dispose();
-                    lukest = new Texture("images/snegov.png");
-                    carTex = new Texture("images/snegox.png");
-                    shavermTex = new Texture("images/cand.png");
+                    Resurces.lukest = Resurces.loadTexture(Resurces.PATH_LUKE_WINTER);
+                    Resurces.carTex = Resurces.loadTexture(Resurces.PATH_CAR_WINTER);
+                    Resurces.shavermTex = Resurces.loadTexture(Resurces.PATH_SHAVERM_WINTER);
 
                     initLukes();
                     initCars();
@@ -365,6 +356,9 @@ public class ScreenGame implements Screen {
                 } else if (menuButton.isHint((int) touchPoint.x, (int) touchPoint.y)) {
                     Resurces.gameMusic.stop();
                     main.setScreen(main.screenMenu);
+                } else if (pauseSoundBtn.isHint((int) touchPoint.x, (int) touchPoint.y)) {
+                    main.screenSounds.fromGame = true;
+                    main.setScreen(main.screenSounds);
                 }
             }
         }
@@ -494,7 +488,7 @@ public class ScreenGame implements Screen {
 
         for (Car car : cars) {
             if (car.isActive) {
-                drawableItems.add(new DrawableItem(car, car.y, 4));
+                drawableItems.add(new DrawableItem(car, car.y + 1000, 4));
             }
         }
 
@@ -518,7 +512,7 @@ public class ScreenGame implements Screen {
 
         if (gameState == GameState.PAUSED) {
             main.batch.setColor(0, 0, 0, 0.7f);
-            main.batch.draw(Resurces.getPixelTexture(), 0, 0, SCR_WIDTH, SCR_HEIGHT);
+            main.batch.draw(Resurces.whitePixel, 0, 0, SCR_WIDTH, SCR_HEIGHT);
             main.batch.setColor(1, 1, 1, 1);
 
             String pauseText = "PAUSED";
@@ -527,6 +521,7 @@ public class ScreenGame implements Screen {
             resumeButton.draw(main.batch);
             restartButton.draw(main.batch);
             menuButton.draw(main.batch);
+            pauseSoundBtn.draw(main.batch);
         }
         if (gameState == GameState.PLAYING) {
             buttonUp.draw(main.batch);
@@ -594,7 +589,6 @@ public class ScreenGame implements Screen {
         for (int i = 0; i < CAR_COUNT; i++) {
             cars[i] = new Car(CAR_COUNT, i);
             cars[i].isActive = false;
-            cars[i].screenGame = this;
         }
 
         for (int i = 0; i < 5; i++) {
@@ -628,7 +622,6 @@ public class ScreenGame implements Screen {
         lukes = new Lukes[LUKE_COUNT];
         for (int i = 0; i < LUKE_COUNT; i++) {
             lukes[i] = new Lukes(LUKE_COUNT, i);
-            lukes[i].screenGame = this;
         }
     }
 
@@ -658,7 +651,6 @@ public class ScreenGame implements Screen {
         shaverm = new Shaverm[SHAVERM_COUNT];
         for (int i = 0; i < SHAVERM_COUNT; i++) {
             shaverm[i] = new Shaverm(SHAVERM_COUNT, i);
-            shaverm[i].screenGame = this;
         }
     }
 
@@ -704,14 +696,12 @@ public class ScreenGame implements Screen {
         pointCounter.dispose();
         eatCounter.dispose();
         background.dispose();
-        if (lukest != null) lukest.dispose();
-        if (carTex != null) carTex.dispose();
-        if (shavermTex != null) shavermTex.dispose();
         pauseFont.dispose();
         pauseButton.dispose();
         resumeButton.dispose();
         restartButton.dispose();
         menuButton.dispose();
+        pauseSoundBtn.dispose();
         buttonUp.dispose();
         buttonDown.dispose();
         buttonJump.dispose();

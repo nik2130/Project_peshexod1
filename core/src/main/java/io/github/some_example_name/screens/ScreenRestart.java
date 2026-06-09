@@ -25,7 +25,7 @@ public class ScreenRestart implements Screen {
 
     public ScreenRestart(Main main) {
         this.main = main;
-        background = new MovingBackground("backgrounds/restart_bg.png");
+        background = new MovingBackground(Resurces.PATH_BG_RESTART);
         buttonRestart = new TextButton(100, 400, "RESTART");
         buttonMenu = new TextButton(100, 200, "MENU");
         pointCounter = new PointCounter(700, 620);
@@ -94,5 +94,3 @@ public class ScreenRestart implements Screen {
 
     }
 }
-
-

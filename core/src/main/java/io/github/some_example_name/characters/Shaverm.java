@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import io.github.some_example_name.screens.ScreenGame;
+import io.github.some_example_name.Resurces;
 
 public class Shaverm {
     Texture texture;
@@ -20,8 +20,6 @@ public class Shaverm {
     public int height;
     Random random;
     public boolean isActive = true;
-
-    public ScreenGame screenGame;
 
     private static List<Shaverm> activeShaverms = new ArrayList<>();
 
@@ -71,7 +69,7 @@ public class Shaverm {
         }
 
         activeShaverms.add(this);
-        texture = new Texture("images/Shaverma.png");
+        texture = Resurces.loadTexture(Resurces.PATH_SHAVERM);
     }
 
     private boolean hasCollisionWithOtherShaverms() {
@@ -96,7 +94,7 @@ public class Shaverm {
     }
 
     public void dispose() {
-        if (texture != null && texture != screenGame.shavermTex) {
+        if (texture != null && texture != Resurces.shavermTex) {
             texture.dispose();
         }
         texture = null;
@@ -116,7 +114,7 @@ public class Shaverm {
     private void deactivate() {
         isActive = false;
         activeShaverms.remove(this);
-        if (texture != null && texture != screenGame.shavermTex) {
+        if (texture != null && texture != Resurces.shavermTex) {
             texture.dispose();
         }
         texture = null;
@@ -166,10 +164,10 @@ public class Shaverm {
         isActive = true;
         activeShaverms.add(this);
 
-        if (texture != null && texture != screenGame.shavermTex) {
+        if (texture != null && texture != Resurces.shavermTex) {
             texture.dispose();
         }
-        texture = screenGame.shavermTex;
+        texture = Resurces.shavermTex;
     }
 
     public boolean isCollision(Person person) {

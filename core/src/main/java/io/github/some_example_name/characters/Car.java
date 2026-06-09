@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import io.github.some_example_name.screens.ScreenGame;
+import io.github.some_example_name.Resurces;
 
 public class Car {
     Texture texture;
@@ -25,9 +25,6 @@ public class Car {
     final int LANE_WIDTH = SCR_WIDTH / 2;
     static final int LANE_COUNT = 5;
     private static long[] laneCooldowns = new long[LANE_COUNT];
-
-
-    public ScreenGame screenGame;
 
     private static List<Car> activeCars = new ArrayList<>();
 
@@ -44,8 +41,8 @@ public class Car {
         downSpeed = 3 + random.nextInt(4);
 
         isActive = false;
-        x = -SCR_WIDTH;
-        y = -SCR_HEIGHT-300;
+        x = -1000;
+        y = -1000;
     }
 
 
@@ -57,7 +54,7 @@ public class Car {
     }
 
     public void dispose() {
-        if (texture != null && texture != screenGame.carTex) {
+        if (texture != null && texture != Resurces.carTex) {
             texture.dispose();
         }
         texture = null;
@@ -111,10 +108,10 @@ public class Car {
         isActive = true;
         activeCars.add(this);
 
-        if (texture != null && texture != screenGame.carTex) {
+        if (texture != null && texture != Resurces.carTex) {
             texture.dispose();
         }
-        texture = screenGame.carTex;
+        texture = Resurces.carTex;
     }
 
     private boolean hasCollisionWithOtherCarsStrict() {

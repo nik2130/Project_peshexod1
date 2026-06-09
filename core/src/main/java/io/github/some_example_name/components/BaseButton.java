@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 
-
+import io.github.some_example_name.Resurces;
 
 public class BaseButton {
 
@@ -26,7 +26,7 @@ public class BaseButton {
         this.text = text;
         this.x = x;
         this.y = y;
-        this.texture = new Texture(texturePath);
+        this.texture = Resurces.loadTexture(texturePath);
 
         font = new BitmapFont();
         font.getData().setScale(5f);

@@ -21,21 +21,16 @@ public class ScreenSounds implements Screen {
     TextButton buttonVolumeminus;
     TextButton buttonQuit;
     private BitmapFont font;
-    private Texture whitePixel;
+    public boolean fromGame = false;
 
     public ScreenSounds(Main main) {
         this.main = main;
-        background = new MovingBackground("backgrounds/restart_bg.png");
+        background = new MovingBackground(Resurces.PATH_BG_RESTART);
         buttonVolumeplus = new TextButton(640, 250, "Volume++");
         buttonVolumeminus = new TextButton(250, 250, "Volume--");
         buttonQuit = new TextButton(440, 100, "BACK");
         font = new BitmapFont();
         font.getData().setScale(1.5f);
-        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pixmap.setColor(Color.WHITE);
-        pixmap.fill();
-        whitePixel = new Texture(pixmap);
-        pixmap.dispose();
     }
 
     @Override
@@ -59,7 +54,12 @@ public class ScreenSounds implements Screen {
                 Resurces.updateVolume(Resurces.Volume - 0.1f);
             }
             if (buttonQuit.isHint((int) touch.x, (int) touch.y)) {
-                main.setScreen(main.screenSettings);
+                if (fromGame) {
+                    fromGame = false;
+                    main.setScreen(main.screenGame);
+                } else {
+                    main.setScreen(main.screenSettings);
+                }
             }
 
         }
@@ -77,11 +77,11 @@ public class ScreenSounds implements Screen {
         float barY = 500;
 
         main.batch.setColor(0.3f, 0.3f, 0.3f, 1);
-        main.batch.draw(whitePixel, barX, barY, barWidth, barHeight);
+        main.batch.draw(Resurces.whitePixel, barX, barY, barWidth, barHeight);
 
         main.batch.setColor(0.6f, 0f, 0f, 1);
         float fillWidth = barWidth * Resurces.Volume;
-        main.batch.draw(whitePixel, barX, barY, fillWidth, barHeight);
+        main.batch.draw(Resurces.whitePixel, barX, barY, fillWidth, barHeight);
 
         main.batch.setColor(1, 1, 1, 1);
 

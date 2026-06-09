@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import io.github.some_example_name.Main;
+import io.github.some_example_name.Resurces;
 import io.github.some_example_name.components.MovingBackground;
 import io.github.some_example_name.components.TextButton;
 
@@ -19,27 +20,19 @@ public class ScreenAchievements implements Screen {
     BitmapFont titleFont;
     BitmapFont descFont;
 
-    Texture ach1000Badge;
-    Texture achCactusBadge;
-    Texture achSnowmanBadge;
-
     boolean ach1000Unlocked = false;
     boolean achCactusUnlocked = false;
     boolean achSnowmanUnlocked = false;
 
     public ScreenAchievements(Main main) {
         this.main = main;
-        background = new MovingBackground("backgrounds/restart_bg.png");
+        background = new MovingBackground(Resurces.PATH_BG_RESTART);
         buttonQuit = new TextButton(440, 60, "BACK");
 
         titleFont = new BitmapFont();
         titleFont.getData().setScale(3f);
         descFont = new BitmapFont();
         descFont.getData().setScale(1.5f);
-
-        ach1000Badge = new Texture("images/achievement_1000.png");
-        achCactusBadge = new Texture("images/achievement_cactus.png");
-        achSnowmanBadge = new Texture("images/achievement_snowman.png");
     }
 
     @Override
@@ -68,25 +61,25 @@ public class ScreenAchievements implements Screen {
         titleFont.draw(main.batch, "ACHIEVEMENTS", 400, 660);
 
         float y = 500;
-        main.batch.draw(ach1000Badge, 80, y - 50, 80, 80);
+        main.batch.draw(Resurces.ach1000Badge, 80, y - 50, 80, 80);
         main.batch.setColor(ach1000Unlocked ? 1 : 0.5f, ach1000Unlocked ? 1 : 0.5f, ach1000Unlocked ? 1 : 0.5f, ach1000Unlocked ? 1 : 0.6f);
-        main.batch.draw(ach1000Badge, 80, y - 50, 80, 80);
+        main.batch.draw(Resurces.ach1000Badge, 80, y - 50, 80, 80);
         main.batch.setColor(1, 1, 1, 1);
         descFont.draw(main.batch, "Walk 1000 steps", 180, y + 20);
         descFont.draw(main.batch, ach1000Unlocked ? "[ DONE ]" : "[ " + main.scoreManager.getHighScore() + " / 1000 ]", 180, y - 10);
 
         y = 350;
-        main.batch.draw(achCactusBadge, 80, y - 50, 80, 80);
+        main.batch.draw(Resurces.achCactusBadge, 80, y - 50, 80, 80);
         main.batch.setColor(achCactusUnlocked ? 1 : 0.5f, achCactusUnlocked ? 1 : 0.5f, achCactusUnlocked ? 1 : 0.5f, achCactusUnlocked ? 1 : 0.6f);
-        main.batch.draw(achCactusBadge, 80, y - 50, 80, 80);
+        main.batch.draw(Resurces.achCactusBadge, 80, y - 50, 80, 80);
         main.batch.setColor(1, 1, 1, 1);
         descFont.draw(main.batch, "Reach desert (300 pts)", 180, y + 20);
         descFont.draw(main.batch, achCactusUnlocked ? "[ DONE ]" : "[ locked ]", 180, y - 10);
 
         y = 200;
-        main.batch.draw(achSnowmanBadge, 80, y - 50, 80, 80);
+        main.batch.draw(Resurces.achSnowmanBadge, 80, y - 50, 80, 80);
         main.batch.setColor(achSnowmanUnlocked ? 1 : 0.5f, achSnowmanUnlocked ? 1 : 0.5f, achSnowmanUnlocked ? 1 : 0.5f, achSnowmanUnlocked ? 1 : 0.6f);
-        main.batch.draw(achSnowmanBadge, 80, y - 50, 80, 80);
+        main.batch.draw(Resurces.achSnowmanBadge, 80, y - 50, 80, 80);
         main.batch.setColor(1, 1, 1, 1);
         descFont.draw(main.batch, "Reach winter (600 pts)", 180, y + 20);
         descFont.draw(main.batch, achSnowmanUnlocked ? "[ DONE ]" : "[ locked ]", 180, y - 10);
@@ -105,8 +98,5 @@ public class ScreenAchievements implements Screen {
         background.dispose();
         titleFont.dispose();
         descFont.dispose();
-        ach1000Badge.dispose();
-        achCactusBadge.dispose();
-        achSnowmanBadge.dispose();
     }
 }

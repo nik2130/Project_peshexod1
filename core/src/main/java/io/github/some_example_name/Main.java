@@ -12,7 +12,6 @@ import io.github.some_example_name.screens.ScreenSkins;
 import io.github.some_example_name.screens.ScreenSounds;
 import io.github.some_example_name.screens.ScreenAchievements;
 
-/** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends Game {
 
     public ScreenMenu screenMenu;
@@ -34,6 +33,7 @@ public class Main extends Game {
     @Override
     public void create() {
         Resurces.initMusic();
+        Resurces.initTextures();
 
         scoreManager = new ScoreManager();
 
@@ -50,11 +50,10 @@ public class Main extends Game {
         setScreen(screenMenu);
     }
 
-
-
     @Override
     public void dispose() {
         batch.dispose();
         Resurces.disposeMusic();
+        Resurces.disposeTextures();
     }
 }
