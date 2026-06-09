@@ -22,13 +22,14 @@ public class Main extends Game {
     public ScreenSounds screenSounds;
     public ScreenAchievements screenAchievements;
 
-    public static final int SCR_WIDTH = 1280;
-    public static final int SCR_HEIGHT = 720;
     public OrthographicCamera camera;
     public SpriteBatch batch;
     public boolean skinChanged = false;
 
     public ScoreManager scoreManager;
+
+    public static final int SCR_WIDTH = 1280;
+    public static final int SCR_HEIGHT = 720;
 
     @Override
     public void create() {

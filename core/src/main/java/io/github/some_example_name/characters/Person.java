@@ -7,20 +7,14 @@ import static io.github.some_example_name.Resurces.PERSON2_IMG_PATH;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
-import io.github.some_example_name.Main;
+import io.github.some_example_name.GameSettings;
 
-public class Person {
-    int x;
-    public int y;
-    int width;
-    int height;
+public class Person extends GameObject {
     int moveSpeed;
     private boolean isMoving = false;
     private boolean isMovingY = false;
     private boolean isMovingYM = false;
     private int stepAnimationCounter = 0;
-    private final int STEP_ANIMATION_FRAMES = 15;
-    Main main;
     Texture[] framesArray;
     int frameCount;
     int stepsTaken = 0;
@@ -32,11 +26,10 @@ public class Person {
         this.height = height;
         this.moveSpeed = moveSpeed;
 
-        framesArray = new Texture[]{
-            new Texture(PERSON0_IMG_PATH),
-            new Texture(PERSON1_IMG_PATH),
-            new Texture(PERSON2_IMG_PATH),
-        };
+        framesArray = new Texture[GameSettings.ANIMATION_FRAME_COUNT];
+        framesArray[0] = new Texture(PERSON0_IMG_PATH);
+        framesArray[1] = new Texture(PERSON1_IMG_PATH);
+        framesArray[2] = new Texture(PERSON2_IMG_PATH);
     }
 
     public void updateTextures() {
@@ -46,11 +39,9 @@ public class Person {
             }
         }
 
-        framesArray = new Texture[]{
-            new Texture(PERSON0_IMG_PATH),
-            new Texture(PERSON1_IMG_PATH),
-            new Texture(PERSON2_IMG_PATH),
-        };
+        framesArray[0] = new Texture(PERSON0_IMG_PATH);
+        framesArray[1] = new Texture(PERSON1_IMG_PATH);
+        framesArray[2] = new Texture(PERSON2_IMG_PATH);
         frameCount = 0;
     }
 
@@ -58,19 +49,19 @@ public class Person {
         if (isMoving) {
             stepAnimationCounter++;
 
-            if (stepAnimationCounter >= STEP_ANIMATION_FRAMES) {
+            if (stepAnimationCounter >= GameSettings.STEP_ANIMATION_FRAMES) {
                 isMoving = false;
                 stepAnimationCounter = 0;
-                stepsTaken+=1;
+                stepsTaken += 1;
             }
         }
         if (isMovingY) {
             stepAnimationCounter++;
-            if (y < main.SCR_HEIGHT-100) {
-                y += 5;
+            if (y < GameSettings.SCR_HEIGHT - 100) {
+                y += GameSettings.PERSON_MOVE_Y_SPEED;
             }
 
-            if (stepAnimationCounter >= STEP_ANIMATION_FRAMES) {
+            if (stepAnimationCounter >= GameSettings.STEP_ANIMATION_FRAMES) {
                 isMovingY = false;
                 stepAnimationCounter = 0;
             }
@@ -78,10 +69,10 @@ public class Person {
         if (isMovingYM) {
             stepAnimationCounter++;
             if (y > 0) {
-                y -= 5;
+                y -= GameSettings.PERSON_MOVE_Y_SPEED;
             }
 
-            if (stepAnimationCounter >= STEP_ANIMATION_FRAMES) {
+            if (stepAnimationCounter >= GameSettings.STEP_ANIMATION_FRAMES) {
                 isMovingYM = false;
                 stepAnimationCounter = 0;
             }
@@ -106,10 +97,10 @@ public class Person {
         }
     }
 
-
+    @Override
     public void draw(Batch batch) {
         if (isMoving || isMovingY || isMovingYM) {
-            int frameIndex = (frameCount / 10) % framesArray.length;
+            int frameIndex = (frameCount / GameSettings.ANIMATION_FRAME_DIVISOR) % framesArray.length;
             batch.draw(framesArray[frameIndex], x, y, width, height);
             frameCount++;
         } else {
@@ -117,6 +108,7 @@ public class Person {
         }
     }
 
+    @Override
     public void dispose() {
         for (Texture texture : framesArray) {
             texture.dispose();
@@ -126,7 +118,6 @@ public class Person {
     public int getStepsTaken() {
         return stepsTaken;
     }
-
 
     public boolean isMoving() {
         return isMoving;

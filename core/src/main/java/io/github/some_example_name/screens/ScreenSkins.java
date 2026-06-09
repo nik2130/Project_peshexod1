@@ -2,14 +2,12 @@ package io.github.some_example_name.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import io.github.some_example_name.GameSettings;
 import io.github.some_example_name.Main;
 import io.github.some_example_name.Resurces;
-import io.github.some_example_name.characters.Person;
 import io.github.some_example_name.components.MovingBackground;
 import io.github.some_example_name.components.TextButton;
 
@@ -25,20 +23,19 @@ public class ScreenSkins implements Screen {
     public ScreenSkins(Main main) {
         this.main = main;
         background = new MovingBackground(Resurces.PATH_BG_RESTART);
-        buttonSkin1 = new TextButton(200, 550, "Human");
-        buttonSkin2 = new TextButton(200, 400, "Gomuncul");
-        buttonSkin3 = new TextButton(200, 250, "WtfFf']qaw!!11!");
-        buttonQuit = new TextButton(440, 50, "BACK");
+        buttonSkin1 = new TextButton(GameSettings.SKINS_BTN_X, GameSettings.SKINS_BTN_1_Y, "Human");
+        buttonSkin2 = new TextButton(GameSettings.SKINS_BTN_X, GameSettings.SKINS_BTN_2_Y, "Gomuncul");
+        buttonSkin3 = new TextButton(GameSettings.SKINS_BTN_X, GameSettings.SKINS_BTN_3_Y, "WtfFf']qaw!!11!");
+        buttonQuit = new TextButton(GameSettings.SKINS_BACK_BTN_X, GameSettings.SKINS_BACK_BTN_Y, "BACK");
     }
 
     @Override
     public void show() {
-
     }
 
     @Override
     public void render(float delta) {
-        ScreenUtils.clear(0, 0, 0, 1);
+        ScreenUtils.clear(GameSettings.CLEAR_COLOR_R, GameSettings.CLEAR_COLOR_G, GameSettings.CLEAR_COLOR_B, GameSettings.CLEAR_COLOR_A);
         main.camera.update();
         main.batch.setProjectionMatrix(main.camera.combined);
         main.batch.begin();
@@ -80,7 +77,7 @@ public class ScreenSkins implements Screen {
         }
 
         background.onDraw(main.batch);
-        main.batch.draw(Resurces.skinTexture, 700, 200, 500, 400);
+        main.batch.draw(Resurces.skinTexture, GameSettings.SKINS_PREVIEW_X, GameSettings.SKINS_PREVIEW_Y, GameSettings.SKINS_PREVIEW_WIDTH, GameSettings.SKINS_PREVIEW_HEIGHT);
         buttonSkin1.draw(main.batch);
         buttonSkin2.draw(main.batch);
         buttonSkin3.draw(main.batch);
@@ -91,26 +88,26 @@ public class ScreenSkins implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
     }
 
     @Override
     public void pause() {
-
     }
 
     @Override
     public void resume() {
-
     }
 
     @Override
     public void hide() {
-
     }
 
     @Override
     public void dispose() {
         background.dispose();
+        buttonSkin1.dispose();
+        buttonSkin2.dispose();
+        buttonSkin3.dispose();
+        buttonQuit.dispose();
     }
 }

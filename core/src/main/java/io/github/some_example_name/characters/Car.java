@@ -1,58 +1,31 @@
 package io.github.some_example_name.characters;
 
-import static io.github.some_example_name.Main.SCR_HEIGHT;
-import static io.github.some_example_name.Main.SCR_WIDTH;
-
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
+import static io.github.some_example_name.GameSettings.SCR_HEIGHT;
+import static io.github.some_example_name.GameSettings.SCR_WIDTH;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
+import io.github.some_example_name.GameSettings;
 import io.github.some_example_name.Resurces;
 
-public class Car {
-    Texture texture;
-    public float x;
-    public float y;
-    public int width;
-    public int height;
+public class Car extends GameObject {
     int downSpeed;
     int lane;
-    Random random;
-    public boolean isActive = true;
-    final int LANE_WIDTH = SCR_WIDTH / 2;
-    static final int LANE_COUNT = 5;
-    private static long[] laneCooldowns = new long[LANE_COUNT];
 
     private static List<Car> activeCars = new ArrayList<>();
 
-    static {
-        for (int i = 0; i < LANE_COUNT; i++) {
-            laneCooldowns[i] = 100;
-        }
-    }
-
     public Car(int carCount, int carIdx) {
-        random = new Random();
-        width = 120;
-        height = 200;
-        downSpeed = 3 + random.nextInt(4);
+        width = GameSettings.CAR_WIDTH;
+        height = GameSettings.CAR_HEIGHT;
+        downSpeed = GameSettings.CAR_DOWN_SPEED_MIN + random.nextInt(GameSettings.CAR_DOWN_SPEED_RANGE);
 
         isActive = false;
-        x = -1000;
-        y = -1000;
+        x = -SCR_WIDTH - width;
+        y = -SCR_HEIGHT - height;
     }
 
-
-    public void draw(Batch batch) {
-        if (isActive && texture != null) {
-            batch.draw(texture, (int) x, (int) y, width / 2, height / 2, width, height, 1, 1, 180, 0, 0,
-                texture.getWidth(), texture.getHeight(), false, false);
-        }
-    }
-
+    @Override
     public void dispose() {
         if (texture != null && texture != Resurces.carTex) {
             texture.dispose();
@@ -77,7 +50,6 @@ public class Car {
         y -= downSpeed;
     }
 
-
     public void resetConstantly(float newY) {
         if (activeCars.contains(this)) {
             activeCars.remove(this);
@@ -86,9 +58,9 @@ public class Car {
         boolean positionFound = false;
         int attempts = 0;
 
-        while (!positionFound && attempts < 30) {
-            lane = random.nextInt(LANE_COUNT);
-            x = lane * LANE_WIDTH + (LANE_WIDTH - width) / 3;
+        while (!positionFound && attempts < GameSettings.SPAWN_ATTEMPTS) {
+            lane = random.nextInt(GameSettings.LANE_COUNT);
+            x = lane * GameSettings.LANE_WIDTH + (GameSettings.LANE_WIDTH - width) / GameSettings.CAR_DOWN_SPEED_MIN;
             y = newY;
 
             if (!hasCollisionWithOtherCarsStrict()) {
@@ -98,13 +70,12 @@ public class Car {
         }
 
         if (!positionFound) {
-            lane = random.nextInt(LANE_COUNT);
-            x = lane * LANE_WIDTH + (LANE_WIDTH - width) / 3;
+            lane = random.nextInt(GameSettings.LANE_COUNT);
+            x = lane * GameSettings.LANE_WIDTH + (GameSettings.LANE_WIDTH - width) / GameSettings.CAR_DOWN_SPEED_MIN;
             y = newY;
         }
 
-        laneCooldowns[lane] = System.currentTimeMillis();
-        downSpeed = 3 + random.nextInt(4);
+        downSpeed = GameSettings.CAR_DOWN_SPEED_MIN + random.nextInt(GameSettings.CAR_DOWN_SPEED_RANGE);
         isActive = true;
         activeCars.add(this);
 
@@ -117,8 +88,8 @@ public class Car {
     private boolean hasCollisionWithOtherCarsStrict() {
         for (Car otherCar : activeCars) {
             if (otherCar != this && otherCar.isActive) {
-                boolean xOverlap = Math.abs(this.x - otherCar.x) < this.width * 1.2f;
-                boolean yOverlap = Math.abs(this.y - otherCar.y) < this.height * 1.2f;
+                boolean xOverlap = Math.abs(this.x - otherCar.x) < this.width * GameSettings.COLLISION_STRICT_FACTOR;
+                boolean yOverlap = Math.abs(this.y - otherCar.y) < this.height * GameSettings.COLLISION_STRICT_FACTOR;
 
                 if (xOverlap && yOverlap) {
                     return true;
@@ -131,8 +102,8 @@ public class Car {
     private boolean hasCollisionWithOtherCars() {
         for (Car otherCar : activeCars) {
             if (otherCar != this && otherCar.isActive) {
-                boolean xOverlap = Math.abs(this.x - otherCar.x) < this.width * 0.8f;
-                boolean yOverlap = Math.abs(this.y - otherCar.y) < this.height * 0.8f;
+                boolean xOverlap = Math.abs(this.x - otherCar.x) < this.width * GameSettings.COLLISION_LOOSE_FACTOR;
+                boolean yOverlap = Math.abs(this.y - otherCar.y) < this.height * GameSettings.COLLISION_LOOSE_FACTOR;
 
                 if (xOverlap && yOverlap) {
                     return true;
@@ -140,14 +111,5 @@ public class Car {
             }
         }
         return false;
-    }
-
-    public boolean isCollision(Person person) {
-        if (!isActive) return false;
-
-        return x < person.x + person.width &&
-            x + width > person.x &&
-            y < person.y + person.height &&
-            y + height > person.y;
     }
 }

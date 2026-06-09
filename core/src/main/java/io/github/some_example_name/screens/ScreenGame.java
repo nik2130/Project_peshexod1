@@ -1,61 +1,56 @@
 package io.github.some_example_name.screens;
 
-import static io.github.some_example_name.Main.SCR_HEIGHT;
-import static io.github.some_example_name.Main.SCR_WIDTH;
+import static io.github.some_example_name.GameSettings.SCR_HEIGHT;
+import static io.github.some_example_name.GameSettings.SCR_WIDTH;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.Array;
 
+import io.github.some_example_name.GameSettings;
 import io.github.some_example_name.Main;
 import io.github.some_example_name.Resurces;
-import io.github.some_example_name.characters.Lukes;
+import io.github.some_example_name.characters.GameObject;
+import io.github.some_example_name.characters.Hatch;
 import io.github.some_example_name.characters.Person;
 import io.github.some_example_name.characters.Car;
-import io.github.some_example_name.characters.Shaverm;
+import io.github.some_example_name.characters.Shawarma;
 import io.github.some_example_name.components.EatCounter;
 import io.github.some_example_name.components.MovingBackground;
 import io.github.some_example_name.components.PointCounter;
 import io.github.some_example_name.components.TextButton;
-import io.github.some_example_name.components.TextButtonWalk;
+import io.github.some_example_name.components.ArrowButton;
 
-public class ScreenGame implements Screen {
+public class ScreenGame extends ScreenAdapter {
     Main main;
     Person person;
     MovingBackground background;
-    Lukes[] lukes;
+    Hatch[] lukes;
     Car[] cars;
-    Shaverm[] shaverm;
+    Shawarma[] shawarma;
     boolean isGameOver;
     int gamePoints;
     PointCounter pointCounter;
     EatCounter eatCounter;
-    final int pointCounterMarginRight = 300;
-    final int pointCounterMarginTop = 60;
-    final int CAR_COUNT = 20;
-    final int LUKE_COUNT = 5;
-    final int SHAVERM_COUNT = 5;
-    private TextButtonWalk buttonUp;
-    private TextButtonWalk buttonDown;
-    private TextButtonWalk buttonJump;
-    private boolean backdesert = false;
-    private boolean winter = false;
+    final int pointCounterMarginRight = GameSettings.POINT_COUNTER_MARGIN_RIGHT;
+    final int pointCounterMarginTop = GameSettings.POINT_COUNTER_MARGIN_TOP;
+    boolean backdesert = false;
+    boolean winter = false;
 
-    int eat = 100;
+    int eat = GameSettings.INITIAL_EAT;
 
-    private static Preferences preferences = Gdx.app.getPreferences("User saves");
-    private final int BACKGROUND_SPEED = 3;
+    private static Preferences preferences = Gdx.app.getPreferences(GameSettings.USER_SAVES);
+    private final int BACKGROUND_SPEED = GameSettings.BACKGROUND_SPEED;
 
     private Array<DrawableItem> drawableItems = new Array<>();
 
     private float carSpawnTimer = 0;
-    private final float CAR_SPAWN_INTERVAL = 0.7f;
-    private final float MIN_CAR_DISTANCE = 200;
+    private final float CAR_SPAWN_INTERVAL = GameSettings.CAR_SPAWN_INTERVAL;
+    private final float MIN_CAR_DISTANCE = GameSettings.MIN_CAR_DISTANCE;
 
     private enum GameState {
         PLAYING, PAUSED, GAME_OVER
@@ -68,25 +63,26 @@ public class ScreenGame implements Screen {
     private TextButton restartButton;
     private TextButton menuButton;
     private TextButton pauseSoundBtn;
+    private ArrowButton buttonUp;
+    private ArrowButton buttonDown;
+    private ArrowButton buttonJump;
 
     private Vector3 touchPoint = new Vector3();
 
     private BitmapFont pauseFont;
 
-    private final int PAUSE_BUTTON_SPACING = 60;
-    private final int BUTTON_HEIGHT = 50;
-    private final int BUTTON_OFFSET_X = 200;
-    private final int BUTTON_OFFSET_Y = -80;
+    private final int PAUSE_BUTTON_SPACING = GameSettings.PAUSE_BUTTON_SPACING;
+    private final int BUTTON_HEIGHT = GameSettings.PAUSE_BUTTON_HEIGHT;
+    private final int BUTTON_OFFSET_X = GameSettings.PAUSE_BUTTON_OFFSET_X;
+    private final int BUTTON_OFFSET_Y = GameSettings.PAUSE_BUTTON_OFFSET_Y;
 
-    private final int SAFE_SPAWN_X = SCR_WIDTH / 2 - 50;
-    private final int SAFE_SPAWN_Y = 100;
+    private final int SAFE_SPAWN_X = GameSettings.SAFE_SPAWN_X;
+    private final int SAFE_SPAWN_Y = GameSettings.SAFE_SPAWN_Y;
 
-    private final float TOP_ZONE_PERCENT = 0.35f;
-    private final float BOTTOM_ZONE_PERCENT = 0.35f;
-    private final int TOP_ZONE_HEIGHT = (int) (SCR_HEIGHT * TOP_ZONE_PERCENT);
-    private final int BOTTOM_ZONE_HEIGHT = (int) (SCR_HEIGHT * BOTTOM_ZONE_PERCENT);
-    private final int BUTTON_SIZE = 100;
-    private final int BUTTON_MARGIN = 30;
+    private final int TOP_ZONE_HEIGHT = (int) (SCR_HEIGHT * 0.35f);
+    private final int BOTTOM_ZONE_HEIGHT = (int) (SCR_HEIGHT * 0.35f);
+    private final int BUTTON_SIZE = GameSettings.BUTTON_SIZE;
+    private final int BUTTON_MARGIN = GameSettings.BUTTON_MARGIN;
     private final int BUTTONS_POS_X = 80;
     private final int BUTTON_UP_Y = SCR_HEIGHT - BUTTON_SIZE - BUTTON_MARGIN;
     private final int BUTTON_DOWN_Y = BUTTON_MARGIN;
@@ -102,15 +98,15 @@ public class ScreenGame implements Screen {
         person.updateTextures();
 
         pointCounter = new PointCounter(SCR_WIDTH - pointCounterMarginRight - 100, SCR_HEIGHT - pointCounterMarginTop);
-        eatCounter = new EatCounter(SCR_WIDTH - pointCounterMarginRight - 900, SCR_HEIGHT - pointCounterMarginTop);
+        eatCounter = new EatCounter(SCR_WIDTH - pointCounterMarginRight - GameSettings.EAT_COUNTER_MARGIN_RIGHT, SCR_HEIGHT - pointCounterMarginTop);
         background = new MovingBackground(Resurces.PATH_BG_ROAD);
 
-        pauseButton = createCompactButton(SCR_WIDTH - 120, SCR_HEIGHT - 80, "II", 2.5f, 60, 60);
+        pauseButton = createCompactButton(SCR_WIDTH - 120, SCR_HEIGHT - 80, "II", GameSettings.PAUSE_BTN_SCALE, 60, 60);
 
         setupPauseMenuButtons();
         initMovementButtons();
         pauseFont = new BitmapFont();
-        pauseFont.getData().setScale(2.0f);
+        pauseFont.getData().setScale(GameSettings.FONT_SCALE_PAUSE);
     }
 
     private TextButton createCompactButton(int x, int y, String text, float fontScale, int width, int height) {
@@ -129,42 +125,44 @@ public class ScreenGame implements Screen {
 
         return button;
     }
+
     private void initMovementButtons() {
-        buttonJump = new TextButtonWalk(1100, 100, "", Resurces.PATH_RIGHT);
+        buttonJump = new ArrowButton(GameSettings.WALK_JUMP_X, GameSettings.WALK_JUMP_Y, "", Resurces.PATH_RIGHT);
         buttonJump.buttonWidth = BUTTON_SIZE;
         buttonJump.buttonHeight = BUTTON_SIZE;
         buttonJump.textX = buttonJump.x + (BUTTON_SIZE - buttonJump.textWidth) / 2;
         buttonJump.textY = buttonJump.y + BUTTON_SIZE / 2 + buttonJump.textHeight / 2;
-        buttonJump.font.getData().setScale(2.0f);
+        buttonJump.font.getData().setScale(GameSettings.FONT_SCALE_WALK);
 
-        buttonUp = new TextButtonWalk(1000, 150, "", Resurces.PATH_UP);
+        buttonUp = new ArrowButton(GameSettings.WALK_UP_X, GameSettings.WALK_UP_Y, "", Resurces.PATH_UP);
         buttonUp.buttonWidth = BUTTON_SIZE;
         buttonUp.buttonHeight = BUTTON_SIZE;
         buttonUp.textX = buttonUp.x + (BUTTON_SIZE - buttonUp.textWidth) / 2;
         buttonUp.textY = buttonUp.y + BUTTON_SIZE / 2 + buttonUp.textHeight / 2;
-        buttonUp.font.getData().setScale(2.0f);
+        buttonUp.font.getData().setScale(GameSettings.FONT_SCALE_WALK);
 
-        buttonDown = new TextButtonWalk(1000, 50, "", Resurces.PATH_DOWN);
+        buttonDown = new ArrowButton(GameSettings.WALK_DOWN_X, GameSettings.WALK_DOWN_Y, "", Resurces.PATH_DOWN);
         buttonDown.buttonWidth = BUTTON_SIZE;
         buttonDown.buttonHeight = BUTTON_SIZE;
         buttonDown.textX = buttonDown.x + (BUTTON_SIZE - buttonDown.textWidth) / 2;
         buttonDown.textY = buttonDown.y + BUTTON_SIZE / 2 + buttonDown.textHeight / 2;
-        buttonDown.font.getData().setScale(2.0f);
+        buttonDown.font.getData().setScale(GameSettings.FONT_SCALE_WALK);
     }
+
     private int findSafeSpawnPosition() {
         int safeX = SAFE_SPAWN_X;
         int attempts = 0;
-        final int safeAreaWidth = 200;
+        final int safeAreaWidth = GameSettings.SAFE_AREA_WIDTH;
 
         boolean safePositionFound = false;
 
-        while (!safePositionFound && attempts < 10) {
+        while (!safePositionFound && attempts < GameSettings.SAFE_SPAWN_ATTEMPTS) {
             safePositionFound = true;
 
-            for (Lukes lukes1 : lukes) {
-                if (lukes1 != null && lukes1.isActive) {
-                    boolean xOverlap = Math.abs(lukes1.x - safeX) < (lukes1.width + safeAreaWidth) / 2;
-                    boolean yOverlap = Math.abs(lukes1.y - SAFE_SPAWN_Y) < (lukes1.height + 200) / 2;
+            for (Hatch hatch1 : lukes) {
+                if (hatch1 != null && hatch1.isActive) {
+                    boolean xOverlap = Math.abs(hatch1.x - safeX) < (hatch1.width + safeAreaWidth) / 2;
+                    boolean yOverlap = Math.abs(hatch1.y - SAFE_SPAWN_Y) < (hatch1.height + 200) / 2;
 
                     if (xOverlap && yOverlap) {
                         safePositionFound = false;
@@ -174,10 +172,10 @@ public class ScreenGame implements Screen {
                 }
             }
 
-            for (Shaverm shaverm1 : shaverm) {
-                if (shaverm1 != null && shaverm1.isActive) {
-                    boolean xOverlap = Math.abs(shaverm1.x - safeX) < (shaverm1.width + safeAreaWidth) / 2;
-                    boolean yOverlap = Math.abs(shaverm1.y - SAFE_SPAWN_Y) < (shaverm1.height + 200) / 2;
+            for (Shawarma shawarma1 : shawarma) {
+                if (shawarma1 != null && shawarma1.isActive) {
+                    boolean xOverlap = Math.abs(shawarma1.x - safeX) < (shawarma1.width + safeAreaWidth) / 2;
+                    boolean yOverlap = Math.abs(shawarma1.y - SAFE_SPAWN_Y) < (shawarma1.height + 200) / 2;
 
                     if (xOverlap && yOverlap) {
                         safePositionFound = false;
@@ -228,17 +226,17 @@ public class ScreenGame implements Screen {
         winter = false;
 
         gamePoints = 0;
-        eat = 100;
+        eat = GameSettings.INITIAL_EAT;
         gameState = GameState.PLAYING;
 
         for (Car car : cars) {
             car.dispose();
         }
-        for (Lukes lukes1 : lukes) {
-            lukes1.dispose();
+        for (Hatch hatch1 : lukes) {
+            hatch1.dispose();
         }
-        for (Shaverm shaverm1 : shaverm) {
-            shaverm1.dispose();
+        for (Shawarma shawarma1 : shawarma) {
+            shawarma1.dispose();
         }
 
         initCars();
@@ -262,19 +260,17 @@ public class ScreenGame implements Screen {
     }
 
     private void checkSpawnSafety() {
-        for (Lukes lukes1 : lukes) {
-            if (lukes1.isActive && lukes1.isCollision(person)) {
-                lukes1.isActive = false;
+        for (Hatch hatch1 : lukes) {
+            if (hatch1.isActive && hatch1.isCollision(person)) {
+                hatch1.isActive = false;
             }
         }
 
-        for (Shaverm shaverm1 : shaverm) {
-            if (shaverm1.isActive && shaverm1.isCollision(person)) {
-                shaverm1.isActive = false;
+        for (Shawarma shawarma1 : shawarma) {
+            if (shawarma1.isActive && shawarma1.isCollision(person)) {
+                shawarma1.isActive = false;
             }
         }
-
-
     }
 
     @Override
@@ -307,11 +303,11 @@ public class ScreenGame implements Screen {
                     Resurces.gameMusic.pause();
                     return;
                 }
-                if (gamePoints>300 && backdesert==false){
+                if (gamePoints > GameSettings.DESERT_UNLOCK_SCORE && !backdesert) {
                     background = new MovingBackground(Resurces.PATH_BG_DESERT);
-                    for (Lukes l : lukes) l.dispose();
+                    for (Hatch l : lukes) l.dispose();
                     for (Car c : cars) c.dispose();
-                    for (Shaverm s : shaverm) s.dispose();
+                    for (Shawarma s : shawarma) s.dispose();
                     Resurces.lukest = Resurces.loadTexture(Resurces.PATH_LUKE_DESERT);
                     Resurces.carTex = Resurces.loadTexture(Resurces.PATH_CAR_DESERT);
                     Resurces.shavermTex = Resurces.loadTexture(Resurces.PATH_SHAVERM_DESERT);
@@ -321,11 +317,11 @@ public class ScreenGame implements Screen {
                     initShaverm();
                     backdesert = true;
                 }
-                if (gamePoints>600 && winter==false){
+                if (gamePoints > GameSettings.WINTER_UNLOCK_SCORE && !winter) {
                     background = new MovingBackground(Resurces.PATH_BG_WINTER);
-                    for (Lukes l : lukes) l.dispose();
+                    for (Hatch l : lukes) l.dispose();
                     for (Car c : cars) c.dispose();
-                    for (Shaverm s : shaverm) s.dispose();
+                    for (Shawarma s : shawarma) s.dispose();
                     Resurces.lukest = Resurces.loadTexture(Resurces.PATH_LUKE_WINTER);
                     Resurces.carTex = Resurces.loadTexture(Resurces.PATH_CAR_WINTER);
                     Resurces.shavermTex = Resurces.loadTexture(Resurces.PATH_SHAVERM_WINTER);
@@ -381,12 +377,12 @@ public class ScreenGame implements Screen {
                 car.moveWithBackground(BACKGROUND_SPEED);
             }
 
-            for (Lukes lukes1 : lukes) {
-                lukes1.moveWithBackground(BACKGROUND_SPEED);
+            for (Hatch hatch1 : lukes) {
+                hatch1.moveWithBackground(BACKGROUND_SPEED);
             }
 
-            for (Shaverm shaverm1 : shaverm) {
-                shaverm1.moveWithBackground(BACKGROUND_SPEED);
+            for (Shawarma shawarma1 : shawarma) {
+                shawarma1.moveWithBackground(BACKGROUND_SPEED);
             }
         }
 
@@ -405,14 +401,12 @@ public class ScreenGame implements Screen {
         int steps = person.getStepsTaken();
         if (steps > gamePoints) {
             gamePoints = steps;
-            eat -= 2;
+            eat -= GameSettings.EAT_DRAIN_PER_STEP;
             if (eat < 0) eat = 0;
         }
 
         updateLukes();
         updateShaverm();
-
-
 
         for (Car car : cars) {
             if (car.isActive && car.y < -car.height) {
@@ -426,27 +420,27 @@ public class ScreenGame implements Screen {
                 return;
             }
         }
-        for (Lukes lukes1 : lukes) {
-            if (lukes1.isCollision(person)) {
+        for (Hatch hatch1 : lukes) {
+            if (hatch1.isCollision(person)) {
                 gameState = GameState.GAME_OVER;
                 return;
             }
         }
-        for (Shaverm shaverm1 : shaverm) {
-            if (shaverm1.isCollision(person)) {
-                shaverm1.isActive = false;
-                eat += 20;
-                if (eat > 100) {
-                    eat = 100;
+        for (Shawarma shawarma1 : shawarma) {
+            if (shawarma1.isCollision(person)) {
+                shawarma1.isActive = false;
+                eat += GameSettings.EAT_GAIN_PER_SHAWARMA;
+                if (eat > GameSettings.MAX_EAT) {
+                    eat = GameSettings.MAX_EAT;
                 }
             }
         }
     }
 
     private void handleGameOver() {
-        int bestScore = preferences.getInteger("best_score", 0);
+        int bestScore = preferences.getInteger(GameSettings.BEST_SCORE_KEY, 0);
         if (gamePoints > bestScore) {
-            preferences.putInteger("best_score", gamePoints);
+            preferences.putInteger(GameSettings.BEST_SCORE_KEY, gamePoints);
             preferences.flush();
         }
 
@@ -463,26 +457,24 @@ public class ScreenGame implements Screen {
 
         main.batch.setProjectionMatrix(main.camera.combined);
 
-        ScreenUtils.clear(0.2f, 0.2f, 0.2f, 1f);
+        ScreenUtils.clear(GameSettings.GAME_CLEAR_R, GameSettings.GAME_CLEAR_G, GameSettings.GAME_CLEAR_B, 1f);
         main.batch.begin();
 
         background.onDraw(main.batch);
 
-
         drawableItems.clear();
-
 
         drawableItems.add(new DrawableItem(person, person.y, 1));
 
-        for (Lukes lukes1 : lukes) {
-            if (lukes1.isActive) {
-                drawableItems.add(new DrawableItem(lukes1, lukes1.y, 2));
+        for (Hatch hatch1 : lukes) {
+            if (hatch1.isActive) {
+                drawableItems.add(new DrawableItem(hatch1, hatch1.y, 2));
             }
         }
 
-        for (Shaverm shaverm1 : shaverm) {
-            if (shaverm1.isActive) {
-                drawableItems.add(new DrawableItem(shaverm1, shaverm1.y, 3));
+        for (Shawarma shawarma1 : shawarma) {
+            if (shawarma1.isActive) {
+                drawableItems.add(new DrawableItem(shawarma1, shawarma1.y, 3));
             }
         }
 
@@ -540,7 +532,7 @@ public class ScreenGame implements Screen {
             }
         }
 
-        if (activeCars >= 8) {
+        if (activeCars >= GameSettings.MAX_ACTIVE_CARS) {
             return;
         }
 
@@ -585,13 +577,13 @@ public class ScreenGame implements Screen {
     }
 
     private void initCars() {
-        cars = new Car[CAR_COUNT];
-        for (int i = 0; i < CAR_COUNT; i++) {
-            cars[i] = new Car(CAR_COUNT, i);
+        cars = new Car[GameSettings.CAR_COUNT];
+        for (int i = 0; i < GameSettings.CAR_COUNT; i++) {
+            cars[i] = new Car(GameSettings.CAR_COUNT, i);
             cars[i].isActive = false;
         }
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < GameSettings.INITIAL_CAR_SPAWN_COUNT; i++) {
             trySpawnCar();
         }
     }
@@ -600,28 +592,28 @@ public class ScreenGame implements Screen {
         float maxX = SCR_WIDTH;
         int activeLukes = 0;
 
-        for (Lukes lukes1 : lukes) {
-            if (lukes1.isActive) {
-                if (lukes1.x > maxX) {
-                    maxX = lukes1.x;
+        for (Hatch hatch1 : lukes) {
+            if (hatch1.isActive) {
+                if (hatch1.x > maxX) {
+                    maxX = hatch1.x;
                 }
                 activeLukes++;
             }
         }
 
-        int minActiveLukes = 5;
-        for (Lukes lukes1 : lukes) {
-            if (!lukes1.isActive && activeLukes < minActiveLukes) {
-                lukes1.reset(maxX);
+        int minActiveLukes = GameSettings.MIN_ACTIVE_LUKES;
+        for (Hatch hatch1 : lukes) {
+            if (!hatch1.isActive && activeLukes < minActiveLukes) {
+                hatch1.reset(maxX);
                 activeLukes++;
             }
         }
     }
 
     private void initLukes() {
-        lukes = new Lukes[LUKE_COUNT];
-        for (int i = 0; i < LUKE_COUNT; i++) {
-            lukes[i] = new Lukes(LUKE_COUNT, i);
+        lukes = new Hatch[GameSettings.LUKE_COUNT];
+        for (int i = 0; i < GameSettings.LUKE_COUNT; i++) {
+            lukes[i] = new Hatch(GameSettings.LUKE_COUNT, i);
         }
     }
 
@@ -629,28 +621,28 @@ public class ScreenGame implements Screen {
         float maxX = SCR_WIDTH;
         int activeShaverm = 0;
 
-        for (Shaverm shaverm1 : shaverm) {
-            if (shaverm1.isActive) {
-                if (shaverm1.x > maxX) {
-                    maxX = shaverm1.x;
+        for (Shawarma shawarma1 : shawarma) {
+            if (shawarma1.isActive) {
+                if (shawarma1.x > maxX) {
+                    maxX = shawarma1.x;
                 }
                 activeShaverm++;
             }
         }
 
-        int minActiveShaverm = 4;
-        for (Shaverm shaverm1 : shaverm) {
-            if (!shaverm1.isActive && activeShaverm < minActiveShaverm) {
-                shaverm1.reset(maxX);
+        int minActiveShaverm = GameSettings.MIN_ACTIVE_SHAVERM;
+        for (Shawarma shawarma1 : shawarma) {
+            if (!shawarma1.isActive && activeShaverm < minActiveShaverm) {
+                shawarma1.reset(maxX);
                 activeShaverm++;
             }
         }
     }
 
     private void initShaverm() {
-        shaverm = new Shaverm[SHAVERM_COUNT];
-        for (int i = 0; i < SHAVERM_COUNT; i++) {
-            shaverm[i] = new Shaverm(SHAVERM_COUNT, i);
+        shawarma = new Shawarma[GameSettings.SHAVERM_COUNT];
+        for (int i = 0; i < GameSettings.SHAVERM_COUNT; i++) {
+            shawarma[i] = new Shawarma(GameSettings.SHAVERM_COUNT, i);
         }
     }
 
@@ -687,11 +679,11 @@ public class ScreenGame implements Screen {
         for (Car car : cars) {
             car.dispose();
         }
-        for (Lukes lukes1 : lukes) {
-            lukes1.dispose();
+        for (Hatch hatch1 : lukes) {
+            hatch1.dispose();
         }
-        for (Shaverm shaverm1 : shaverm) {
-            shaverm1.dispose();
+        for (Shawarma shawarma1 : shawarma) {
+            shawarma1.dispose();
         }
         pointCounter.dispose();
         eatCounter.dispose();
@@ -708,26 +700,18 @@ public class ScreenGame implements Screen {
     }
 
     private class DrawableItem {
-        private Object object;
+        private GameObject object;
         private float drawY;
         private int layer;
 
-        DrawableItem(Object object, float drawY, int layer) {
+        DrawableItem(GameObject object, float drawY, int layer) {
             this.object = object;
             this.drawY = drawY;
             this.layer = layer;
         }
 
         void draw(com.badlogic.gdx.graphics.g2d.Batch batch) {
-            if (object instanceof Car) {
-                ((Car) object).draw(batch);
-            } else if (object instanceof Lukes) {
-                ((Lukes) object).draw(batch);
-            } else if (object instanceof Shaverm) {
-                ((Shaverm) object).draw(batch);
-            } else if (object instanceof Person) {
-                ((Person) object).draw(batch);
-            }
+            object.draw(batch);
         }
     }
 }

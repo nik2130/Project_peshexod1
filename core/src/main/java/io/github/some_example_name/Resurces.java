@@ -33,7 +33,6 @@ public class Resurces {
     public static final String PATH_ACH_1000 = "images/achievement_1000.png";
     public static final String PATH_ACH_CACTUS = "images/achievement_cactus.png";
     public static final String PATH_ACH_SNOWMAN = "images/achievement_snowman.png";
-
     public static final String PATH_AUDIO_MENU = "audio/music/menu.mp3";
     public static final String PATH_AUDIO_GAME = "audio/music/game2.mp3";
     public static final String PATH_AUDIO_LOSE = "audio/sounds/lose.mp3";
@@ -48,7 +47,7 @@ public class Resurces {
     public static Texture skinTexture;
     public static Texture whitePixel;
 
-    // --- skin paths ---
+    // --- skin paths (mutable — not in GameSettings) ---
     public static String skin = "skins/bluebird/blue_birdS.png";
     public static String PERSON0_IMG_PATH = "skins/bluebird/blue_bird0.png";
     public static String PERSON1_IMG_PATH = "skins/bluebird/blue_bird1.png";
@@ -140,6 +139,4 @@ public class Resurces {
         if (skinTexture != null) skinTexture.dispose();
         if (whitePixel != null) whitePixel.dispose();
     }
-
-
 }

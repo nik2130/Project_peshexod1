@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 
+import io.github.some_example_name.GameSettings;
 import io.github.some_example_name.Resurces;
 
 public class BaseButton {
@@ -17,8 +18,8 @@ public class BaseButton {
     public int y;
     public int textX;
     public int textY;
-    public int buttonWidth = 400;
-    public int buttonHeight = 150;
+    public int buttonWidth = GameSettings.DEFAULT_BUTTON_WIDTH;
+    public int buttonHeight = GameSettings.DEFAULT_BUTTON_HEIGHT;
     public int textWidth;
     public int textHeight;
 
@@ -29,7 +30,7 @@ public class BaseButton {
         this.texture = Resurces.loadTexture(texturePath);
 
         font = new BitmapFont();
-        font.getData().setScale(5f);
+        font.getData().setScale(GameSettings.FONT_SCALE_BUTTON);
         font.setColor(Color.WHITE);
 
         GlyphLayout gl = new GlyphLayout(font, text);

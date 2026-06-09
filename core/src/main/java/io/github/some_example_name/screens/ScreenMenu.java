@@ -1,11 +1,11 @@
 package io.github.some_example_name.screens;
 
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import io.github.some_example_name.GameSettings;
 import io.github.some_example_name.Main;
 import io.github.some_example_name.Resurces;
 import io.github.some_example_name.components.MovingBackground;
@@ -21,21 +21,17 @@ public class ScreenMenu implements Screen {
     MovingBackground logo;
     PointCounter totalScoreCounter;
     PointCounter highScoreCounter;
-    final int counterMarginLeft = 100;
-    final int counterMarginBottom = 100;
-    final int counterSpacing = 70;
 
     public ScreenMenu(Main main) {
         this.main = main;
         background = new MovingBackground(Resurces.PATH_BG_RESTART);
-        buttonStart = new TextButton(440, 300, "START");
-        buttonSettings = new TextButton(440, 180, "SETTINGS");
+        buttonStart = new TextButton(GameSettings.MENU_START_BTN_X, GameSettings.MENU_START_BTN_Y, "START");
+        buttonSettings = new TextButton(GameSettings.MENU_SETTINGS_BTN_X, GameSettings.MENU_SETTINGS_BTN_Y, "SETTINGS");
 
-        totalScoreCounter = new PointCounter(counterMarginLeft, counterMarginBottom);
+        totalScoreCounter = new PointCounter(GameSettings.MENU_COUNTER_MARGIN_LEFT, GameSettings.MENU_COUNTER_MARGIN_BOTTOM);
+        highScoreCounter = new PointCounter(GameSettings.MENU_COUNTER_MARGIN_LEFT, GameSettings.MENU_COUNTER_MARGIN_BOTTOM + GameSettings.MENU_COUNTER_SPACING);
 
-        highScoreCounter = new PointCounter(counterMarginLeft, counterMarginBottom + counterSpacing);
-
-        buttonQuit = new TextButton(440, 50, "QUIT");
+        buttonQuit = new TextButton(GameSettings.MENU_QUIT_BTN_X, GameSettings.MENU_QUIT_BTN_Y, "QUIT");
         logo = new MovingBackground(Resurces.PATH_LOGO);
     }
 
@@ -46,7 +42,7 @@ public class ScreenMenu implements Screen {
 
     @Override
     public void render(float delta) {
-        ScreenUtils.clear(0, 0, 0, 1);
+        ScreenUtils.clear(GameSettings.CLEAR_COLOR_R, GameSettings.CLEAR_COLOR_G, GameSettings.CLEAR_COLOR_B, GameSettings.CLEAR_COLOR_A);
         main.camera.update();
         main.batch.setProjectionMatrix(main.camera.combined);
         main.batch.begin();
@@ -72,12 +68,10 @@ public class ScreenMenu implements Screen {
         buttonQuit.draw(main.batch);
 
         highScoreCounter.draw(main.batch, "Best: ", main.scoreManager.getHighScore());
-
         totalScoreCounter.draw(main.batch, "Total: ", main.scoreManager.getTotalScore());
 
         main.batch.end();
     }
-
 
     @Override
     public void resize(int width, int height) {

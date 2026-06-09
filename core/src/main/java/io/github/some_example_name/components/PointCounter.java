@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
+import io.github.some_example_name.GameSettings;
+
 public class PointCounter {
     int x, y;
     BitmapFont font;
@@ -13,7 +15,7 @@ public class PointCounter {
         this.y = y;
 
         font = new BitmapFont();
-        font.getData().setScale(3f);
+        font.getData().setScale(GameSettings.FONT_SCALE_COUNTER);
         font.setColor(Color.WHITE);
     }
 
