@@ -2,6 +2,7 @@ package io.github.some_example_name.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -10,13 +11,16 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import io.github.some_example_name.GameSettings;
+import io.github.some_example_name.Config.ColorConfig;
+import io.github.some_example_name.Config.GameplayConfig;
+import io.github.some_example_name.Config.ScreenConfig;
+import io.github.some_example_name.Config.UiConfig;
 import io.github.some_example_name.Main;
 import io.github.some_example_name.Resurces;
 import io.github.some_example_name.components.MovingBackground;
 import io.github.some_example_name.components.TextButton;
 
-public class ScreenSettings implements Screen {
+public class ScreenSettings extends ScreenAdapter {
     Main main;
     MovingBackground background;
     TextButton buttonSkins;
@@ -25,26 +29,26 @@ public class ScreenSettings implements Screen {
     TextButton buttonResetRecords;
     TextButton buttonQuit;
 
-    private BitmapFont notificationFont;
+    private final BitmapFont notificationFont;
     private String notificationText;
     private float notificationTimer;
     private Texture notificationBackground;
-    private int notificationBgWidth = GameSettings.NOTIFICATION_BG_WIDTH;
-    private int notificationBgHeight = GameSettings.NOTIFICATION_BG_HEIGHT;
+    private final int notificationBgWidth = ScreenConfig.NOTIFICATION_BG_WIDTH;
+    private final int notificationBgHeight = ScreenConfig.NOTIFICATION_BG_HEIGHT;
 
     public ScreenSettings(Main main) {
         this.main = main;
         background = new MovingBackground(Resurces.PATH_BG_RESTART);
 
-        buttonSkins = new TextButton(GameSettings.SETTINGS_BTN_X, GameSettings.SETTINGS_BTN_1_Y, "SKINS");
-        buttonSounds = new TextButton(GameSettings.SETTINGS_BTN_X, GameSettings.SETTINGS_BTN_2_Y, "SOUNDS");
-        buttonAchievements = new TextButton(GameSettings.SETTINGS_BTN_X, GameSettings.SETTINGS_BTN_3_Y, "ACHIEVEMENTS");
-        buttonQuit = new TextButton(GameSettings.SETTINGS_BTN_X, GameSettings.SETTINGS_BTN_4_Y, "BACK");
+        buttonSkins = new TextButton(UiConfig.SETTINGS_BTN_X, UiConfig.SETTINGS_BTN_1_Y, "SKINS");
+        buttonSounds = new TextButton(UiConfig.SETTINGS_BTN_X, UiConfig.SETTINGS_BTN_2_Y, "SOUNDS");
+        buttonAchievements = new TextButton(UiConfig.SETTINGS_BTN_X, UiConfig.SETTINGS_BTN_3_Y, "ACHIEVEMENTS");
+        buttonQuit = new TextButton(UiConfig.SETTINGS_BTN_X, UiConfig.SETTINGS_BTN_4_Y, "BACK");
 
-        buttonResetRecords = createCompactButton(1100, 650, "RESET", GameSettings.FONT_SCALE_TITLE, 180, 70);
+        buttonResetRecords = createCompactButton(1100, 650, "RESET", ScreenConfig.FONT_SCALE_TITLE, 180, 70);
 
         notificationFont = new BitmapFont();
-        notificationFont.getData().setScale(GameSettings.FONT_SCALE_NOTIFICATION);
+        notificationFont.getData().setScale(ScreenConfig.FONT_SCALE_NOTIFICATION);
         notificationFont.setColor(Color.WHITE);
         notificationText = "";
         notificationTimer = 0;
@@ -53,7 +57,7 @@ public class ScreenSettings implements Screen {
     }
 
     private void createNotificationBackground() {
-        int borderThickness = GameSettings.NOTIFICATION_BORDER_THICKNESS;
+        int borderThickness = ScreenConfig.NOTIFICATION_BORDER_THICKNESS;
         int totalWidth = notificationBgWidth + borderThickness * 2;
         int totalHeight = notificationBgHeight + borderThickness * 2;
 
@@ -62,10 +66,10 @@ public class ScreenSettings implements Screen {
         pixmap.setColor(new Color(0, 0, 0, 0));
         pixmap.fill();
 
-        pixmap.setColor(new Color(GameSettings.NOTIF_BORDER_R, GameSettings.NOTIF_BORDER_G, GameSettings.NOTIF_BORDER_B, GameSettings.NOTIF_BORDER_A));
+        pixmap.setColor(new Color(ColorConfig.NOTIF_BORDER_R, ColorConfig.NOTIF_BORDER_G, ColorConfig.NOTIF_BORDER_B, ColorConfig.NOTIF_BORDER_A));
         pixmap.fillRectangle(0, 0, totalWidth, totalHeight);
 
-        pixmap.setColor(new Color(GameSettings.NOTIF_FILL_R, GameSettings.NOTIF_FILL_G, GameSettings.NOTIF_FILL_B, GameSettings.NOTIF_FILL_A));
+        pixmap.setColor(new Color(ColorConfig.NOTIF_FILL_R, ColorConfig.NOTIF_FILL_G, ColorConfig.NOTIF_FILL_B, ColorConfig.NOTIF_FILL_A));
         pixmap.fillRectangle(
             borderThickness,
             borderThickness,
@@ -96,12 +100,8 @@ public class ScreenSettings implements Screen {
     }
 
     @Override
-    public void show() {
-    }
-
-    @Override
     public void render(float delta) {
-        ScreenUtils.clear(GameSettings.CLEAR_COLOR_R, GameSettings.CLEAR_COLOR_G, GameSettings.CLEAR_COLOR_B, GameSettings.CLEAR_COLOR_A);
+        ScreenUtils.clear(ColorConfig.CLEAR_COLOR_R, ColorConfig.CLEAR_COLOR_G, ColorConfig.CLEAR_COLOR_B, ColorConfig.CLEAR_COLOR_A);
         main.camera.update();
         main.batch.setProjectionMatrix(main.camera.combined);
         main.batch.begin();
@@ -128,7 +128,7 @@ public class ScreenSettings implements Screen {
                 main.scoreManager.resetAllRecords();
 
                 notificationText = "Statistics have been reset!";
-                notificationTimer = GameSettings.NOTIFICATION_DURATION;
+                notificationTimer = GameplayConfig.NOTIFICATION_DURATION;
             }
             if (buttonQuit.isHint((int) touch.x, (int) touch.y)) {
                 main.setScreen(main.screenMenu);
@@ -145,7 +145,7 @@ public class ScreenSettings implements Screen {
         buttonResetRecords.draw(main.batch);
 
         if (notificationTimer > 0) {
-            int borderThickness = GameSettings.NOTIFICATION_BORDER_THICKNESS;
+            int borderThickness = ScreenConfig.NOTIFICATION_BORDER_THICKNESS;
             float centerX = main.camera.viewportWidth / 2;
             float centerY = main.camera.viewportHeight / 2;
 
@@ -153,8 +153,8 @@ public class ScreenSettings implements Screen {
             int totalHeight = notificationBgHeight + borderThickness * 2;
 
             main.batch.draw(notificationBackground,
-                centerX - totalWidth / 2,
-                centerY + 100 - totalHeight / 2,
+                centerX - (float) totalWidth / 2,
+                centerY + 100 - (float) totalHeight / 2,
                 totalWidth, totalHeight);
 
             GlyphLayout layout = new GlyphLayout(notificationFont, notificationText);
@@ -165,22 +165,6 @@ public class ScreenSettings implements Screen {
         }
 
         main.batch.end();
-    }
-
-    @Override
-    public void resize(int width, int height) {
-    }
-
-    @Override
-    public void pause() {
-    }
-
-    @Override
-    public void resume() {
-    }
-
-    @Override
-    public void hide() {
     }
 
     @Override

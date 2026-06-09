@@ -47,7 +47,7 @@ public class Resurces {
     public static Texture skinTexture;
     public static Texture whitePixel;
 
-    // --- skin paths (mutable — not in GameSettings) ---
+    // --- skin paths (mutable — not in Config) ---
     public static String skin = "skins/bluebird/blue_birdS.png";
     public static String PERSON0_IMG_PATH = "skins/bluebird/blue_bird0.png";
     public static String PERSON1_IMG_PATH = "skins/bluebird/blue_bird1.png";

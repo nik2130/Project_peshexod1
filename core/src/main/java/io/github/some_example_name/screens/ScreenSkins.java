@@ -5,7 +5,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import io.github.some_example_name.GameSettings;
+import io.github.some_example_name.Config.ColorConfig;
+import io.github.some_example_name.Config.UiConfig;
 import io.github.some_example_name.Main;
 import io.github.some_example_name.Resurces;
 import io.github.some_example_name.components.MovingBackground;
@@ -23,10 +24,10 @@ public class ScreenSkins implements Screen {
     public ScreenSkins(Main main) {
         this.main = main;
         background = new MovingBackground(Resurces.PATH_BG_RESTART);
-        buttonSkin1 = new TextButton(GameSettings.SKINS_BTN_X, GameSettings.SKINS_BTN_1_Y, "Human");
-        buttonSkin2 = new TextButton(GameSettings.SKINS_BTN_X, GameSettings.SKINS_BTN_2_Y, "Gomuncul");
-        buttonSkin3 = new TextButton(GameSettings.SKINS_BTN_X, GameSettings.SKINS_BTN_3_Y, "WtfFf']qaw!!11!");
-        buttonQuit = new TextButton(GameSettings.SKINS_BACK_BTN_X, GameSettings.SKINS_BACK_BTN_Y, "BACK");
+        buttonSkin1 = new TextButton(UiConfig.SKINS_BTN_X, UiConfig.SKINS_BTN_1_Y, "Human");
+        buttonSkin2 = new TextButton(UiConfig.SKINS_BTN_X, UiConfig.SKINS_BTN_2_Y, "Gomuncul");
+        buttonSkin3 = new TextButton(UiConfig.SKINS_BTN_X, UiConfig.SKINS_BTN_3_Y, "WtfFf']qaw!!11!");
+        buttonQuit = new TextButton(UiConfig.SKINS_BACK_BTN_X, UiConfig.SKINS_BACK_BTN_Y, "BACK");
     }
 
     @Override
@@ -35,7 +36,7 @@ public class ScreenSkins implements Screen {
 
     @Override
     public void render(float delta) {
-        ScreenUtils.clear(GameSettings.CLEAR_COLOR_R, GameSettings.CLEAR_COLOR_G, GameSettings.CLEAR_COLOR_B, GameSettings.CLEAR_COLOR_A);
+        ScreenUtils.clear(ColorConfig.CLEAR_COLOR_R, ColorConfig.CLEAR_COLOR_G, ColorConfig.CLEAR_COLOR_B, ColorConfig.CLEAR_COLOR_A);
         main.camera.update();
         main.batch.setProjectionMatrix(main.camera.combined);
         main.batch.begin();
@@ -77,7 +78,7 @@ public class ScreenSkins implements Screen {
         }
 
         background.onDraw(main.batch);
-        main.batch.draw(Resurces.skinTexture, GameSettings.SKINS_PREVIEW_X, GameSettings.SKINS_PREVIEW_Y, GameSettings.SKINS_PREVIEW_WIDTH, GameSettings.SKINS_PREVIEW_HEIGHT);
+        main.batch.draw(Resurces.skinTexture, UiConfig.SKINS_PREVIEW_X, UiConfig.SKINS_PREVIEW_Y, UiConfig.SKINS_PREVIEW_WIDTH, UiConfig.SKINS_PREVIEW_HEIGHT);
         buttonSkin1.draw(main.batch);
         buttonSkin2.draw(main.batch);
         buttonSkin3.draw(main.batch);

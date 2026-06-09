@@ -18,7 +18,7 @@ public class GameObject {
 
     public void draw(Batch batch) {
         if (isActive && texture != null) {
-            batch.draw(texture, (int) x, (int) y, width / 2, height / 2, width, height, 1, 1, 180, 0, 0,
+            batch.draw(texture, (int) x, (int) y, (float) width / 2, (float) height / 2, width, height, 1, 1, 180, 0, 0,
                 texture.getWidth(), texture.getHeight(), false, false);
         }
     }

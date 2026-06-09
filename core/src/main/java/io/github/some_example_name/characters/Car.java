@@ -1,24 +1,27 @@
 package io.github.some_example_name.characters;
 
-import static io.github.some_example_name.GameSettings.SCR_HEIGHT;
-import static io.github.some_example_name.GameSettings.SCR_WIDTH;
+import static io.github.some_example_name.Config.ScreenConfig.SCR_HEIGHT;
+import static io.github.some_example_name.Config.ScreenConfig.SCR_WIDTH;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.some_example_name.GameSettings;
+import io.github.some_example_name.Config.EntityConfig;
+import io.github.some_example_name.Config.GameplayConfig;
+import io.github.some_example_name.Config.ScreenConfig;
+import io.github.some_example_name.Config.SpawnConfig;
 import io.github.some_example_name.Resurces;
 
 public class Car extends GameObject {
     int downSpeed;
     int lane;
 
-    private static List<Car> activeCars = new ArrayList<>();
+    private static final List<Car> activeCars = new ArrayList<>();
 
     public Car(int carCount, int carIdx) {
-        width = GameSettings.CAR_WIDTH;
-        height = GameSettings.CAR_HEIGHT;
-        downSpeed = GameSettings.CAR_DOWN_SPEED_MIN + random.nextInt(GameSettings.CAR_DOWN_SPEED_RANGE);
+        width = EntityConfig.CAR_WIDTH;
+        height = EntityConfig.CAR_HEIGHT;
+        downSpeed = GameplayConfig.CAR_DOWN_SPEED_MIN + random.nextInt(GameplayConfig.CAR_DOWN_SPEED_RANGE);
 
         isActive = false;
         x = -SCR_WIDTH - width;
@@ -58,9 +61,9 @@ public class Car extends GameObject {
         boolean positionFound = false;
         int attempts = 0;
 
-        while (!positionFound && attempts < GameSettings.SPAWN_ATTEMPTS) {
-            lane = random.nextInt(GameSettings.LANE_COUNT);
-            x = lane * GameSettings.LANE_WIDTH + (GameSettings.LANE_WIDTH - width) / GameSettings.CAR_DOWN_SPEED_MIN;
+        while (!positionFound && attempts < SpawnConfig.SPAWN_ATTEMPTS) {
+            lane = random.nextInt(GameplayConfig.LANE_COUNT);
+            x = lane * ScreenConfig.LANE_WIDTH + (float) (ScreenConfig.LANE_WIDTH - width) / GameplayConfig.CAR_DOWN_SPEED_MIN;
             y = newY;
 
             if (!hasCollisionWithOtherCarsStrict()) {
@@ -70,12 +73,12 @@ public class Car extends GameObject {
         }
 
         if (!positionFound) {
-            lane = random.nextInt(GameSettings.LANE_COUNT);
-            x = lane * GameSettings.LANE_WIDTH + (GameSettings.LANE_WIDTH - width) / GameSettings.CAR_DOWN_SPEED_MIN;
+            lane = random.nextInt(GameplayConfig.LANE_COUNT);
+            x = lane * ScreenConfig.LANE_WIDTH + (float) (ScreenConfig.LANE_WIDTH - width) / GameplayConfig.CAR_DOWN_SPEED_MIN;
             y = newY;
         }
 
-        downSpeed = GameSettings.CAR_DOWN_SPEED_MIN + random.nextInt(GameSettings.CAR_DOWN_SPEED_RANGE);
+        downSpeed = GameplayConfig.CAR_DOWN_SPEED_MIN + random.nextInt(GameplayConfig.CAR_DOWN_SPEED_RANGE);
         isActive = true;
         activeCars.add(this);
 
@@ -88,8 +91,8 @@ public class Car extends GameObject {
     private boolean hasCollisionWithOtherCarsStrict() {
         for (Car otherCar : activeCars) {
             if (otherCar != this && otherCar.isActive) {
-                boolean xOverlap = Math.abs(this.x - otherCar.x) < this.width * GameSettings.COLLISION_STRICT_FACTOR;
-                boolean yOverlap = Math.abs(this.y - otherCar.y) < this.height * GameSettings.COLLISION_STRICT_FACTOR;
+                boolean xOverlap = Math.abs(this.x - otherCar.x) < this.width * GameplayConfig.COLLISION_STRICT_FACTOR;
+                boolean yOverlap = Math.abs(this.y - otherCar.y) < this.height * GameplayConfig.COLLISION_STRICT_FACTOR;
 
                 if (xOverlap && yOverlap) {
                     return true;
@@ -102,8 +105,8 @@ public class Car extends GameObject {
     private boolean hasCollisionWithOtherCars() {
         for (Car otherCar : activeCars) {
             if (otherCar != this && otherCar.isActive) {
-                boolean xOverlap = Math.abs(this.x - otherCar.x) < this.width * GameSettings.COLLISION_LOOSE_FACTOR;
-                boolean yOverlap = Math.abs(this.y - otherCar.y) < this.height * GameSettings.COLLISION_LOOSE_FACTOR;
+                boolean xOverlap = Math.abs(this.x - otherCar.x) < this.width * GameplayConfig.COLLISION_LOOSE_FACTOR;
+                boolean yOverlap = Math.abs(this.y - otherCar.y) < this.height * GameplayConfig.COLLISION_LOOSE_FACTOR;
 
                 if (xOverlap && yOverlap) {
                     return true;
